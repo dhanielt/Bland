@@ -70,9 +70,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-SugarRush/Temp
-SugarRush/.idea/.idea.SugarRush/.idea/indexLayout.xml
-SugarRush/.idea/.idea.SugarRush/.idea/workspace.xml
+Bland/Temp
+Bland/.idea/.idea.Bland/.idea/indexLayout.xml
+Bland/.idea/.idea.Bland/.idea/workspace.xml
 
-SugarRush/.vsconfig
+Bland/.vsconfig
 .idea/
