@@ -77,22 +77,5 @@ Bland/.idea/.idea.Bland/.idea/workspace.xml
 Bland/.vsconfig
 .idea/
 
-# Unity
-.DS_Store
-Library/
-Temp/
-Build/
-Plugins/
-Packages/
-
-# Photon
-Photon/
-PhotonUnityNetworking/
-PhotonUnityNetworking.dll
-PhotonUnityNetworking.dll.mdb
-PhotonUnityNetworking.pdb
-
-# Windows
-Thumbs.db
-Desktop.ini
+[Pp]hoton/
 *Pruebas/
