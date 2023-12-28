@@ -11,8 +11,10 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
     public int velocidad;
     private Rigidbody2D rb;
     public bool conFisicas;
+    
     void Start()
     {
+        this.name = "jugador" + PhotonNetwork.PlayerList.Length;
         rb = GetComponent<Rigidbody2D>();
         GameObject joystickCanva = GameObject.Find("Fixed Joystick");
         if (joystickCanva != null)
@@ -30,7 +32,6 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
             Debug.LogError("No se encontró el objeto del joystick en la escena.");
         }
     }
-    
     void Update()
     {
         if (photonView.IsMine)

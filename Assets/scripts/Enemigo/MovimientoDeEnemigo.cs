@@ -8,9 +8,6 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
     private Transform objetivo;
     public float speed;
     public bool debePerseguir;
-    void Start()
-    {
-    }
     
     public void BuscarJugadorMasCercano()
     {
@@ -19,48 +16,28 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
             objetivo = null;
             float distanciaMasCercana = float.MaxValue;
 
-            if (PhotonNetwork.PlayerList.Length == 0)
+            for (int i = 1; i <= PhotonNetwork.PlayerList.Length; i++)
             {
-                Debug.Log("Servidor vacío");
-                return;
-            }
+                GameObject jugadorObject = GameObject.Find("jugador" + i);
 
-            foreach (var jugador in PhotonNetwork.PlayerList)
-            {
-                // Encuentra el PhotonView asociado al jugador
-                PhotonView photonView = PhotonView.Find(jugador.UserId);
-
-                if (photonView != null)
+                if (jugadorObject != null)
                 {
-                    // Obtén el ViewID del PhotonView
-                    int viewID = photonView.ViewID;
+                    float distancia = Vector3.Distance(transform.position, jugadorObject.transform.position);
 
-                    // Encuentra el GameObject asociado al jugador
-                    GameObject jugadorObject = photonView.gameObject;
-
-                    if (jugadorObject != null)
+                    if (distancia < distanciaMasCercana)
                     {
-                        float distancia = Vector3.Distance(transform.position, jugadorObject.transform.position);
-
-                        if (distancia < distanciaMasCercana)
-                        {
-                            distanciaMasCercana = distancia;
-                            objetivo = jugadorObject.transform;
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("No se pudo asignar un objeto para el jugador con ViewID: " + viewID);
+                        distanciaMasCercana = distancia;
+                        objetivo = jugadorObject.transform;
+                        debePerseguir = true;
                     }
                 }
                 else
                 {
-                    Debug.Log("No se encontró PhotonView para el jugador con UserId: " + jugador.UserId);
+                    Debug.Log("Jugador" + i + " no está instanciado");
                 }
             }
         }
     }
-
     
     void Update()
     {
@@ -70,7 +47,6 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
         }
         if (debePerseguir)
         {
-            Debug.Log("movi el enemigo");
             transform.position = Vector2.MoveTowards(transform.position, objetivo.position, speed * Time.deltaTime);
         }
     }
