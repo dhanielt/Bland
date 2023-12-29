@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using System;
-using Photon.Pun.Demo.PunBasics;
+
 
 public class EnemigoManager : MonoBehaviour
 {
@@ -11,6 +11,8 @@ public class EnemigoManager : MonoBehaviour
     private int numeroEnemigos;
     public Transform[] spawnPoint = new Transform[6];
     private System.Random generadorAleatorio = new System.Random();
+    private PhotonView mandarInformacion;
+    private string jugadorLocal;
     
     void Start()
     {
@@ -21,9 +23,9 @@ public class EnemigoManager : MonoBehaviour
     IEnumerator instanciarEnemigoPrimeraves()
     {
         yield return new WaitUntil(() => PhotonNetwork.PlayerList.Length != 0);
-        crearInstancia();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         jugador();
+        crearInstancia();
     }
 
     public void crearInstancia()
@@ -33,19 +35,22 @@ public class EnemigoManager : MonoBehaviour
             GameObject nuevoEnemigo = Instantiate(enemigoPrefab, spawnPoint[spawn].position, spawnPoint[spawn].rotation);
             numeroEnemigos += 1;
             nuevoEnemigo.name = "enemigo" + numeroEnemigos;
-            
+            mandarInformacion.RPC("guardarEnemigo", RpcTarget.All, enemigoPrefab.name, spawnPoint[spawn].position, spawnPoint[spawn].rotation, jugadorLocal, numeroEnemigos, nuevoEnemigo.GetComponent<MovimientoDeEnemigo>().getObjetivo());
     }
-
+    
     public void jugador()
     {
         for (int i = 1; i <= PhotonNetwork.PlayerList.Length; i++)
         {
             if (GameObject.Find("jugador" + i).GetComponent<PhotonView>().IsMine)
             {
-                Debug.Log("jugador" + i + " es el local");
+                jugadorLocal = "jugador" + i;
+                mandarInformacion = GameObject.Find("jugador" + i).GetComponent<PhotonView>();
             }
         }
     }
+
+
     
     
     void Update()
