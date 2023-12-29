@@ -14,7 +14,7 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
     
     void Start()
     {
-        this.name = "jugador" + PhotonNetwork.PlayerList.Length;
+        this.name = "jugador" + (this.GetComponent<PhotonView>().ViewID.ToString()[0]);
         rb = GetComponent<Rigidbody2D>();
         GameObject joystickCanva = GameObject.Find("Fixed Joystick");
         if (joystickCanva != null)
