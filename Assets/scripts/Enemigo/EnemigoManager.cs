@@ -20,17 +20,28 @@ public class EnemigoManager : MonoBehaviour
         StartCoroutine(instanciarEnemigoPrimeraves());
     }
 
-    IEnumerator instanciarEnemigoPrimeraves()
+    private IEnumerator instanciarEnemigoPrimeraves()
     {
         yield return new WaitUntil(() => PhotonNetwork.PlayerList.Length != 0);
         yield return new WaitForSeconds(1f);
         jugador();
         crearInstancia();
+        StartCoroutine(oleadas());
+        Debug.Log("se termino la corrutina");
     }
 
+    private IEnumerator oleadas()
+    {
+        while (numeroEnemigos <= 10)
+        {
+            yield return new WaitForSeconds(2f);
+            crearInstancia();
+            yield return null;
+        }
+    }
+    
     public void crearInstancia()
     {
-            
             int spawn = generadorAleatorio.Next(0, 6);
             GameObject nuevoEnemigo = Instantiate(enemigoPrefab, spawnPoint[spawn].position, spawnPoint[spawn].rotation);
             numeroEnemigos += 1;
@@ -49,9 +60,6 @@ public class EnemigoManager : MonoBehaviour
             }
         }
     }
-
-
-    
     
     void Update()
     {
