@@ -14,14 +14,14 @@ public class EnvioDeEnemigos : MonoBehaviour
     }
 
     [PunRPC]
-    public void guardarEnemigo(string enemigoPrefab, Vector3 position, Quaternion rotation, string propietario, int numeroEnemigos, int objetivo)
+    public void guardarEnemigo(string enemigoPrefab, Vector2 position, string propietario, int numeroEnemigos, int objetivo)
     {
         GameObject enemigo;
         
         if (propietario != jugadorLocal)
         {
-            GameObject prefab = Resources.Load(enemigoPrefab) as GameObject;
-            enemigo = Instantiate(prefab, position, rotation);
+            GameObject prefab = Resources.Load("PrefabEnemigos/" + enemigoPrefab) as GameObject;
+            enemigo = Instantiate(prefab, position, Quaternion.identity);
             if (prefab != null)
             {
                 
