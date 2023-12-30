@@ -5,10 +5,12 @@ using Photon.Pun;
 public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
 {
     private Transform objetivo;
+    private Renderer objetivoRender;
     public float speed;
     private int jugador;
     public bool moverse;
-    private new Rigidbody2D rb;
+    private Rigidbody2D rb;
+    private int jugadoresMuertos;
     void Start()
     {
         StartCoroutine(BuscarJugadorMasCercano());
@@ -19,6 +21,7 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
     {
         yield return new WaitUntil(() => PhotonNetwork.PlayerList.Length != 0);
         yield return new WaitForSeconds(1f);
+        jugadoresMuertos = 0;
         
         objetivo = null; 
         float distanciaMasCercana = float.MaxValue;
@@ -27,7 +30,7 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
         { 
             GameObject jugadorObject = GameObject.Find("jugador" + i);
             
-            if (jugadorObject != null) 
+            if (jugadorObject != null && jugadorObject.GetComponent<Renderer>().enabled) 
             { 
                 float distancia = Vector3.Distance(transform.position, jugadorObject.transform.position);
                 
@@ -35,16 +38,25 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
                 { 
                     distanciaMasCercana = distancia; 
                     objetivo = jugadorObject.transform;
+                    objetivoRender = jugadorObject.GetComponent<Renderer>();
                     jugador = i;
                 }
             }
-            else 
-            { 
-                Debug.Log("Jugador" + i + " no está instanciado"); 
+            else
+            {
+                jugadoresMuertos += 1;
+                Debug.Log("Jugador" + i + " no está instanciado 0 muerto"); 
             } 
         }
 
-        moverse = true;
+        if (jugadoresMuertos < PhotonNetwork.PlayerList.Length)
+        {
+            moverse = true;
+        }
+        else
+        {
+            moverse = false;
+        }
     }
 
     public int getObjetivo()
@@ -57,13 +69,22 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
         this.jugador = jugador;
         GameObject jugadorObject = GameObject.Find("jugador" + jugador);
         objetivo = jugadorObject.transform;
+        objetivoRender = jugadorObject.GetComponent<Renderer>();
     }
     
     private void FixedUpdate()
     {
         if (moverse)
         {
-            rb.MovePosition(Vector2.MoveTowards(transform.position, objetivo.position, speed * Time.fixedDeltaTime));
+            if (objetivoRender.enabled)
+            {
+                rb.MovePosition(Vector2.MoveTowards(transform.position, objetivo.transform.position,
+                    speed * Time.fixedDeltaTime));
+            }
+            else
+            {
+                StartCoroutine(BuscarJugadorMasCercano());
+            }
         }
     }
 }

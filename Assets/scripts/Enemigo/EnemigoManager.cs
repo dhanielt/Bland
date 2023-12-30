@@ -60,9 +60,4 @@ public class EnemigoManager : MonoBehaviour
             }
         }
     }
-    
-    void Update()
-    {
-        
-    }
 }

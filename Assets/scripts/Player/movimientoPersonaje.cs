@@ -12,6 +12,7 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
     private Rigidbody2D rb;
     public bool conFisicas;
     private Vector3 direccionMovimiento;
+    public Vector2 velocidadRebote;
     
     void Start()
     {
@@ -56,4 +57,5 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
             }
         }
     }
+    
 }
