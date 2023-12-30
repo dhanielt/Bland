@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -9,9 +8,11 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
     public float speed;
     private int jugador;
     public bool moverse;
+    private new Rigidbody2D rb;
     void Start()
     {
         StartCoroutine(BuscarJugadorMasCercano());
+        rb = GetComponent<Rigidbody2D>();
     }
     
     IEnumerator BuscarJugadorMasCercano()
@@ -58,11 +59,11 @@ public class MovimientoDeEnemigo : MonoBehaviourPunCallbacks
         objetivo = jugadorObject.transform;
     }
     
-    void Update()
+    private void FixedUpdate()
     {
         if (moverse)
         {
-            transform.position = Vector2.MoveTowards(transform.position, objetivo.position, speed * Time.deltaTime);
+            rb.MovePosition(Vector2.MoveTowards(transform.position, objetivo.position, speed * Time.fixedDeltaTime));
         }
     }
 }

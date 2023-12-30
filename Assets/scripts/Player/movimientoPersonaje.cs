@@ -11,6 +11,7 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
     public int velocidad;
     private Rigidbody2D rb;
     public bool conFisicas;
+    private Vector3 direccionMovimiento;
     
     void Start()
     {
@@ -37,16 +38,22 @@ public class movimientoPersonaje : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             Vector2 direccion = Vector2.up * joystick.Vertical + Vector2.right * joystick.Horizontal;
-
-            if (conFisicas)
-            {
-                rb.AddForce(direccion * velocidad *Time.deltaTime, ForceMode2D.Impulse);
-            }
-            else
-            {
-                gameObject.transform.Translate(direccion * velocidad * Time.deltaTime);
-            }
+            direccionMovimiento = direccion * velocidad;
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (photonView.IsMine)
+        {
+            if (conFisicas)
+            {
+                rb.AddForce(direccionMovimiento * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            }
+            else
+            {
+                rb.MovePosition(transform.position + direccionMovimiento * Time.fixedDeltaTime);
+            }
+        }
+    }
 }
